@@ -373,3 +373,47 @@ The Agents framework is under active development in a rapidly evolving field. We
 </tbody>
 </table>
 <!--END_REPO_NAV-->
+
+
+**Interrupt Handler Enhancement (Assignment Requirement)**
+
+This project includes a custom interrupt-handling layer added on top of the default LiveKit Agents behavior.
+The implementation ensures smooth conversational flow by preventing unnecessary TTS interruptions caused by backchannel speech.
+
+*Key Changes*
+
+- Added an interrupt_handler.py module to manage VAD+STT event coordination.
+
+- Integrated the handler inside the voice pipeline to delay interruption until STT text is available.
+
+- Implemented logic to:
+
+    - Ignore filler/backchannel words ("yeah", "ok", "hmm", "right", etc.)   while the agent is speaking.
+
+    - Allow immediate interruption only when user intent contains command-level terms ("stop", "wait", "no", "hold").
+
+    - Handle mixed phrases appropriately (e.g., "yeah but wait" triggers interruption).
+
+    - Maintain normal behavior when the agent is silent.
+
+*Testing*
+
+Run any voice agent example (e.g., basic_agent.py) and verify the following cases:
+
+1. Backchannel input during TTS does not stop the agent.
+
+2. Command phrases interrupt immediately.
+
+3. Mixed phrases behave correctly.
+
+4. Normal STT flow is unchanged when the agent is not speaking.
+
+*Files Added / Modified*
+
+- livekit-agents/interrupt_handler.py (new)
+
+- Minor integration changes inside agent_activity.py / pipeline (to attach handler)
+
+*Requirements*
+
+All dependencies are covered through the existing environment setup. No additional third-party libraries were added.
